@@ -14,7 +14,6 @@ class PROTOTSAB_API AProtoTSABGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
 
 protected:
 	// Called when the game starts or when spawned
