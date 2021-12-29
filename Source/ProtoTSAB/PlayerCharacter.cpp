@@ -14,10 +14,6 @@ APlayerCharacter::APlayerCharacter()
 
 	GetCapsuleComponent()->InitCapsuleSize(40.0f, 95.0f);
 
-	CharacterMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Character Mesh"));
-	CharacterMesh->AddRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
-	CharacterMesh->AddRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
-
 }
 
 // Called every frame
