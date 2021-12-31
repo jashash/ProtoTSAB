@@ -11,6 +11,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
+const FName APlayerCharacter::LookNorthBinding("LookNorth");
+const FName APlayerCharacter::LookEastBinding("LookEast");
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -40,6 +43,13 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Create move direction vector
+	const float LookNorthValue = GetInputAxisValue(LookNorthBinding);
+	const float LookEastValue = GetInputAxisValue(LookEastBinding);
+	const FVector LookDirection = FVector(LookNorthValue, LookEastValue, 0.f);
+	const FRotator LookRotation = LookDirection.Rotation();
+
+	RootComponent->SetWorldRotation(LookRotation);
 }
 
 // Called to bind functionality to input
@@ -63,6 +73,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerCharacter::TurnAtRate);
+
+	PlayerInputComponent->BindAxis(LookNorthBinding);
+	PlayerInputComponent->BindAxis(LookEastBinding);
 }
 
 // Called when the game starts or when spawned

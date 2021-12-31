@@ -29,6 +29,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
+	
+	static const FName LookNorthBinding;
+	static const FName LookEastBinding;
 
 protected:
 	// Called when the game starts or when spawned
