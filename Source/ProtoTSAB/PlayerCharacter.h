@@ -29,6 +29,9 @@ protected:
 	void MoveRight(float Value);
 	virtual void MainFire();
 
+	int maxHealth_m;
+	int currentHealth_m;
+
 	
 	static const FName LookNorthBinding;
 	static const FName LookEastBinding;

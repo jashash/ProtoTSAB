@@ -34,6 +34,9 @@ APlayerCharacter::APlayerCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 2500.0f, 0.0f); // ...at this rotation rate
+
+	maxHealth_m = 100;
+	currentHealth_m = 100;
 }
 
 // Called every frame
