@@ -34,9 +34,6 @@ APlayerCharacter::APlayerCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 2500.0f, 0.0f); // ...at this rotation rate
-
-	GunOffset = FVector(90.f, 0.f, 0.f);
-	CanFire = true;
 }
 
 // Called every frame
@@ -128,30 +125,4 @@ void APlayerCharacter::MoveRight(float Value)
 
 void APlayerCharacter::MainFire()
 {
-	/*
-	// If it's ok to fire again
-	if (CanFire == true)
-	{
-		// Spawn projectile at an offset from this pawn
-		const FVector SpawnLocation = GetActorLocation() + GunOffset;
-
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			// spawn the projectile
-			World->SpawnActor<ATwinStickTestProjectile>(SpawnLocation, FireRotation);
-		}
-
-		bCanFire = false;
-		World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ATwinStickTestPawn::ShotTimerExpired, FireRate);
-
-		// try and play the sound if specified
-		if (FireSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		}
-
-		bCanFire = false;
-	}
-	*/
 }
