@@ -109,16 +109,20 @@ void ASMG::MainFire()
 	if (m_world != NULL)
 	{
 		FActorSpawnParameters Params;
-		Params.bDeferConstruction = true; // We defer construction so that we set ParentComponentActor prior to component registration so they appear selected
-		Params.bAllowDuringConstructionScript = true;
-		Params.OverrideLevel = GetOwner()->GetLevel();
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
 
 		//	USE THIS LINE FOR AIMED ABILITIES.
 		const FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
 
 		const FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
 
-		(m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params))->FireInDirection(3000);
+		ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
+
+		if (Bullet)
+		{
+			Bullet->FireInDirection(LookRotation.Vector());
+		}
 	}
 }
 

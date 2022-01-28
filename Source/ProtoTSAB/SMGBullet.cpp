@@ -35,7 +35,7 @@ ASMGBullet::ASMGBullet()
 		ProjectileMovement->MaxSpeed = 3000.0f;
 		ProjectileMovement->bRotationFollowsVelocity = true;
 		ProjectileMovement->bShouldBounce = true;
-		ProjectileMovement->ProjectileGravityScale = 0.f;
+		ProjectileMovement->ProjectileGravityScale = 0.1f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -60,13 +60,13 @@ ASMGBullet::ASMGBullet()
 // Called every frame
 void ASMGBullet::Tick(float DeltaTime)
 {
-	//Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);
 
 }
 
-void ASMGBullet::FireInDirection(float Speed)
+void ASMGBullet::FireInDirection(const FVector& ShootDirection)
 {
-	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
+	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
 
 void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
@@ -75,6 +75,6 @@ void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 
 void ASMGBullet::BeginPlay()
 {
-	//Super::BeginPlay();
+	Super::BeginPlay();
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
 }

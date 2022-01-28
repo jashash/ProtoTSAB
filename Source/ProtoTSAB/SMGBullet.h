@@ -19,7 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Function that initializes the projectile's velocity in the shoot direction.
-	void FireInDirection(float Speed);
+	void FireInDirection(const FVector& ShootDirection);
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 		class USphereComponent* CollisionSphere;
