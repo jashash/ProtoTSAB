@@ -68,19 +68,20 @@ void ASMGBullet::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
-//
-//void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
-//{
-//	APlayerCharacter* target = (APlayerCharacter*)OtherActor;
-//
-//	if (target)
-//	{
-//		target->DealDamage(m_damageValue);
-//	}
-//}
+
+void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
+{
+	APlayerCharacter* target = Cast<APlayerCharacter>(OtherActor);
+
+	if (target)
+	{
+		target->DealDamage(m_damageValue);
+		Destroy();
+	}
+}
 
 void ASMGBullet::BeginPlay()
 {
 	Super::BeginPlay();
-	//CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
 }

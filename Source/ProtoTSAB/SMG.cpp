@@ -37,7 +37,7 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MainFire", IE_Repeat, this, &ASMG::MainFire);
 	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &ASMG::MainFire);
 	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &ASMG::AltFire);
-	PlayerInputComponent->BindAction("RightStickDown", IE_Pressed, this, &ASMG::Reload);
+	PlayerInputComponent->BindAction("Offense", IE_Pressed, this, &ASMG::Reload);
 }
 
 void ASMG::MainFire()
@@ -72,19 +72,32 @@ void ASMG::AltFire()
 		Params.Instigator = GetInstigator();
 
 		//	USE THIS LINE FOR AIMED ABILITIES.
-		const FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
+		FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
 
-		const FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+		FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
 
-		//	for loop of ammo with widening angles on both sides
+		bool leftSide = true;
+		//	for loop of ammo going from right to left, all ammo counts have same spread
 		for (int ii = 0; ii < m_ammo; ++ii)
 		{
 			ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
 
 			if (Bullet)
 			{
-				if(ii % 2)
-				Bullet->FireInDirection(LookRotation.Vector());
+				if (leftSide)
+				{
+					Bullet->FireInDirection((LookRotation).Vector());
+					LookRotation.Yaw += ii;
+					SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+					leftSide = false;
+				}
+				else
+				{
+					Bullet->FireInDirection((LookRotation).Vector());
+					LookRotation.Yaw -= ii;
+					SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+					leftSide = true;
+				}
 			}
 		}
 		m_ammo = 0;

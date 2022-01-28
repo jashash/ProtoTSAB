@@ -23,6 +23,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/*
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* FireSound;
+	*/
+
+	class UWorld* m_world;
+
+protected:
 	/** Offset from the ships location to spawn projectiles */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
@@ -34,14 +42,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class UClass> ProjectileClass;
 
-	/*
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* FireSound;
-	*/
-
-	class UWorld* m_world;
-
-protected:
 	virtual void BeginPlay() override;
 
 	virtual void MainFire() override;

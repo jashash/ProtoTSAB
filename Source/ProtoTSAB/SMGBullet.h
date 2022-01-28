@@ -21,6 +21,7 @@ public:
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
 
+protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 		class USphereComponent* CollisionSphere;
 
@@ -35,12 +36,11 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 		UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
-	/*UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit);*/
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit);
 
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	float m_damageValue = 2.f;
+	float m_damageValue = 5.f;
 };
