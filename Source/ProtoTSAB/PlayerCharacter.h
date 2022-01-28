@@ -29,10 +29,11 @@ protected:
 	void MoveRight(float Value);
 	virtual void MainFire();
 
-	int maxHealth_m;
-	int currentHealth_m;
+	float m_maxHealth;
+	float m_currentHealth;
 
 	
 	static const FName LookNorthBinding;
 	static const FName LookEastBinding;
+	FVector LookDirection;
 };

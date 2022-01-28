@@ -33,10 +33,10 @@ APlayerCharacter::APlayerCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 2500.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 10000.0f, 0.0f); // ...at this rotation rate
 
-	maxHealth_m = 100;
-	currentHealth_m = 100;
+	m_maxHealth = 100.0f;
+	m_currentHealth = 100.0f;
 }
 
 // Called every frame
@@ -47,7 +47,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	// Create move direction vector
 	const float LookNorthValue = GetInputAxisValue(LookNorthBinding);
 	const float LookEastValue = GetInputAxisValue(LookEastBinding);
-	const FVector LookDirection = FVector(LookNorthValue, LookEastValue, 0.f);
+	LookDirection = FVector(LookNorthValue, LookEastValue, 0.f);
 
 	// If non-zero size, move this actor
 	if (LookDirection.SizeSquared() > 0.0f)
@@ -77,7 +77,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(LookNorthBinding);
 	PlayerInputComponent->BindAxis(LookEastBinding);
 
-	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &APlayerCharacter::MainFire);
+	//PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &CLASSNAME::MainFire);
 }
 
 // Called when the game starts or when spawned
