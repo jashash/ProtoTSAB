@@ -30,8 +30,11 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	virtual void MainFire();
+	virtual void AltFire();
 
-	float m_maxHealth = 100.f;
+	//	MAX HEALTH IS CHARACTER SPECIFIC
+	//const float m_maxHealth = 100.f
+	//	OVERRIDE CURRENT HEALTH TO MAXHEALTH FOR EACH CHARACTER
 	float m_currentHealth = 100.f;
 
 	

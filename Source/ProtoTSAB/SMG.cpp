@@ -20,6 +20,7 @@ ASMG::ASMG()
 
 	GunOffset = FVector(50.f, 0.f, 50.f);
 	FireRate = 0.1f;
+	m_currentHealth = m_maxHealth;
 }
 
 void ASMG::Tick(float DeltaTime)
@@ -34,7 +35,9 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("MainFire", IE_Repeat, this, &ASMG::MainFire);
-	PlayerInputComponent->BindAction("Thought", IE_Pressed, this, &ASMG::Reload);
+	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &ASMG::MainFire);
+	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &ASMG::AltFire);
+	PlayerInputComponent->BindAction("RightStickDown", IE_Pressed, this, &ASMG::Reload);
 }
 
 void ASMG::MainFire()
@@ -57,6 +60,34 @@ void ASMG::MainFire()
 			Bullet->FireInDirection(LookRotation.Vector());
 		}
 		--m_ammo;
+	}
+}
+
+void ASMG::AltFire()
+{
+	if (m_world != NULL && m_ammo > 0)
+	{
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+
+		//	USE THIS LINE FOR AIMED ABILITIES.
+		const FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
+
+		const FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+
+		//	for loop of ammo with widening angles on both sides
+		for (int ii = 0; ii < m_ammo; ++ii)
+		{
+			ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
+
+			if (Bullet)
+			{
+				if(ii % 2)
+				Bullet->FireInDirection(LookRotation.Vector());
+			}
+		}
+		m_ammo = 0;
 	}
 }
 

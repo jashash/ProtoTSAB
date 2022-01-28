@@ -45,8 +45,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void MainFire() override;
+	virtual void AltFire() override;
 
 	void Reload();
 
+	const float m_maxHealth = 100.f;
 	int m_ammo = 10;
 };

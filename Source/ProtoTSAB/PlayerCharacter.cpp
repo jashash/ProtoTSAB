@@ -137,3 +137,7 @@ void APlayerCharacter::MoveRight(float Value)
 void APlayerCharacter::MainFire()
 {
 }
+
+void APlayerCharacter::AltFire()
+{
+}
