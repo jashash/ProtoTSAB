@@ -5,6 +5,12 @@
 
 #include "SMGBullet.h"
 //#include "Kismet/GameplayStatistics.h"
+#include "UObject/Class.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
 
 #include "TrainingMode.h"
 
@@ -20,7 +26,7 @@ void ASMG::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FireShot(LookDirection);
+	//FireShot(LookDirection);
 }
 
 void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -30,7 +36,7 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &ASMG::MainFire);
 }
 
-
+/*
 void ASMG::FireShot(FVector FireDirection)
 {
 	// If it's ok to fire again
@@ -61,8 +67,9 @@ void ASMG::FireShot(FVector FireDirection)
 			bCanFire = false;
 		}
 	}
-}
+}*/
 
+/*
 void ASMG::Fire()
 {
 	// Attempt to fire a projectile.
@@ -89,25 +96,29 @@ void ASMG::Fire()
 			}
 		}
 	}
-}
+}*/
 
+/*
 void ASMG::ShotTimerExpired()
 {
 	bCanFire = true;
-}
+}*/
 
 void ASMG::MainFire()
 {
 	if (m_world != NULL)
 	{
-		SpawnLocation = GetActorLocation() + GunOffset;
+		FActorSpawnParameters Params;
+		Params.bDeferConstruction = true; // We defer construction so that we set ParentComponentActor prior to component registration so they appear selected
+		Params.bAllowDuringConstructionScript = true;
+		Params.OverrideLevel = GetOwner()->GetLevel();
 
-		m_world->SpawnActor<ASMGBullet>(FVector(0.f, 0.f, 200.f), LookDirection.Rotation());
+		//	USE THIS LINE FOR AIMED ABILITIES.
+		const FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
 
-		/*if (FireSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		}*/
+		const FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+
+		(m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params))->FireInDirection(3000);
 	}
 }
 

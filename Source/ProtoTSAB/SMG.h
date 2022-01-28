@@ -24,9 +24,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/* Fire a shot in the specified direction */
-	void FireShot(FVector FireDirection);
+	//void FireShot(FVector FireDirection);
 
-	void Fire();
+	//void Fire();
 
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
@@ -40,7 +40,7 @@ public:
 		float FireRate;
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class AActor> ProjectileClass;
+		TSubclassOf<class UClass> ProjectileClass;
 
 	/*
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -48,9 +48,6 @@ public:
 	*/
 
 	class UWorld* m_world;
-
-	FRotator SpawnRotation;
-	FVector SpawnLocation;
 
 protected:
 	virtual void BeginPlay() override;

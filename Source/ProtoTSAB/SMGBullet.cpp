@@ -22,7 +22,7 @@ ASMGBullet::ASMGBullet()
 		// Use a sphere as a simple collision representation.
 		CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 		// Set the sphere's collision radius.
-		CollisionSphere->InitSphereRadius(15.0f);
+		CollisionSphere->InitSphereRadius(1.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionSphere;
 	}
@@ -34,8 +34,8 @@ ASMGBullet::ASMGBullet()
 		ProjectileMovement->InitialSpeed = 3000.0f;
 		ProjectileMovement->MaxSpeed = 3000.0f;
 		ProjectileMovement->bRotationFollowsVelocity = true;
-		ProjectileMovement->bShouldBounce = false;
-		ProjectileMovement->ProjectileGravityScale = 0.0f;
+		ProjectileMovement->bShouldBounce = true;
+		ProjectileMovement->ProjectileGravityScale = 0.f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -64,8 +64,9 @@ void ASMGBullet::Tick(float DeltaTime)
 
 }
 
-void ASMGBullet::FireInDirection(const FVector& ShootDirection)
+void ASMGBullet::FireInDirection(float Speed)
 {
+	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 }
 
 void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
