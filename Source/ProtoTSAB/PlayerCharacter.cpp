@@ -34,9 +34,6 @@ APlayerCharacter::APlayerCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 10000.0f, 0.0f); // ...at this rotation rate
-
-	m_maxHealth = 100.0f;
-	m_currentHealth = 100.0f;
 }
 
 // Called every frame
@@ -78,6 +75,17 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(LookEastBinding);
 
 	//PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &CLASSNAME::MainFire);
+}
+
+void APlayerCharacter::DealDamage(float damage)
+{
+	m_currentHealth -= damage;
+
+	if (m_currentHealth <= 0.f)
+	{
+		//	respawn logic or something
+		Destroy();
+	}
 }
 
 // Called when the game starts or when spawned

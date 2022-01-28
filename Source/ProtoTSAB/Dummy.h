@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "PlayerCharacter.generated.h"
+#include "PlayerCharacter.h"
+#include "Dummy.generated.h"
 
 UCLASS()
-class PROTOTSAB_API APlayerCharacter : public ACharacter
+class PROTOTSAB_API ADummy : public APlayerCharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	APlayerCharacter();
+	ADummy();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -21,21 +21,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void DealDamage(float damage);
+	UPROPERTY(EditAnywhere)
+		class UBoxComponent* CollisionBox;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	void MoveForward(float Value);
-	void MoveRight(float Value);
-	virtual void MainFire();
-
-	float m_maxHealth = 100.f;
-	float m_currentHealth = 100.f;
-
-	
-	static const FName LookNorthBinding;
-	static const FName LookEastBinding;
-	FVector LookDirection;
 };

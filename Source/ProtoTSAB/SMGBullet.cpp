@@ -54,7 +54,7 @@ ASMGBullet::ASMGBullet()
 		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
 	}
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 0.4f;
 }
 
 // Called every frame
@@ -68,13 +68,19 @@ void ASMGBullet::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
-
-void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
-{
-}
+//
+//void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
+//{
+//	APlayerCharacter* target = (APlayerCharacter*)OtherActor;
+//
+//	if (target)
+//	{
+//		target->DealDamage(m_damageValue);
+//	}
+//}
 
 void ASMGBullet::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
+	//CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
 }
