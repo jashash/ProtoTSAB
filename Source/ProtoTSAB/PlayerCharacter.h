@@ -31,6 +31,7 @@ protected:
 	void MoveRight(float Value);
 	virtual void MainFire();
 	virtual void AltFire();
+	virtual void AimedAbility1();
 
 	//	MAX HEALTH IS CHARACTER SPECIFIC
 	//const float m_maxHealth = 100.f

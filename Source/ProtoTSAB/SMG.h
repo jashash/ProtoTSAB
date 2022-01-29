@@ -46,6 +46,7 @@ protected:
 
 	virtual void MainFire() override;
 	virtual void AltFire() override;
+	virtual void AimedAbility1() override;
 
 	void Reload();
 

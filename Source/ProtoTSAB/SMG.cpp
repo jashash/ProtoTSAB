@@ -4,6 +4,7 @@
 #include "SMG.h"
 
 #include "SMGBullet.h"
+#include "SMGNade.h"
 //#include "Kismet/GameplayStatistics.h"
 #include "UObject/Class.h"
 #include "Components/CapsuleComponent.h"
@@ -18,7 +19,7 @@ ASMG::ASMG()
 	:APlayerCharacter()
 {
 
-	GunOffset = FVector(50.f, 0.f, 50.f);
+	GunOffset = FVector(50.f, 0.f, 15.f);
 	FireRate = 0.1f;
 	m_currentHealth = m_maxHealth;
 }
@@ -37,6 +38,7 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MainFire", IE_Repeat, this, &ASMG::MainFire);
 	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &ASMG::MainFire);
 	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &ASMG::AltFire);
+	PlayerInputComponent->BindAction("AimedAbility1", IE_Pressed, this, &ASMG::AimedAbility1);
 	PlayerInputComponent->BindAction("Offense", IE_Pressed, this, &ASMG::Reload);
 }
 
@@ -98,6 +100,28 @@ void ASMG::AltFire()
 		else
 		{
 			ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
+		}
+	}
+}
+
+void ASMG::AimedAbility1()
+{
+	if (m_world != NULL)
+	{
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+
+		//	USE THIS LINE FOR AIMED ABILITIES.
+		const FRotator LookRotation = GetCapsuleComponent()->GetRelativeRotation();
+
+		const FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
+
+		ASMGNade* Grenade = m_world->SpawnActor<ASMGNade>(SpawnLocation, LookRotation, Params);
+
+		if (Grenade)
+		{
+			Grenade->FireInDirection(LookRotation.Vector());
 		}
 	}
 }

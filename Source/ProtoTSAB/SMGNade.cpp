@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SMGBullet.h"
+
+#include "SMGNade.h"
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -8,9 +9,9 @@
 #include "PlayerCharacter.h"
 
 // Sets default values
-ASMGBullet::ASMGBullet()
+ASMGNade::ASMGNade()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	if (!RootComponent)
@@ -22,7 +23,7 @@ ASMGBullet::ASMGBullet()
 		// Use a sphere as a simple collision representation.
 		CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 		// Set the sphere's collision radius.
-		CollisionSphere->InitSphereRadius(0.5f);
+		CollisionSphere->InitSphereRadius(1.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionSphere;
 	}
@@ -31,11 +32,12 @@ ASMGBullet::ASMGBullet()
 		// Use this component to drive this projectile's movement.
 		ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovement->SetUpdatedComponent(CollisionSphere);
-		ProjectileMovement->InitialSpeed = 3000.0f;
-		ProjectileMovement->MaxSpeed = 3000.0f;
+		ProjectileMovement->InitialSpeed = 1000.0f;
+		ProjectileMovement->MaxSpeed = 1000.0f;
 		ProjectileMovement->bRotationFollowsVelocity = true;
 		ProjectileMovement->bShouldBounce = true;
-		ProjectileMovement->ProjectileGravityScale = 0.f;
+		//	***************I WANT IT TO BOUNCE*************************
+		ProjectileMovement->ProjectileGravityScale = 1.f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -51,25 +53,26 @@ ASMGBullet::ASMGBullet()
 			ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
 		}
 		ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
-		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.08f));
+		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
 	}
-	InitialLifeSpan = 0.4f;
+	InitialLifeSpan = 3.f;
+
 }
 
 // Called every frame
-void ASMGBullet::Tick(float DeltaTime)
+void ASMGNade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ASMGBullet::FireInDirection(const FVector& ShootDirection)
+void ASMGNade::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
 
-void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
+void ASMGNade::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
 	APlayerCharacter* target = Cast<APlayerCharacter>(OtherActor);
 
@@ -80,8 +83,11 @@ void ASMGBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 	}
 }
 
-void ASMGBullet::BeginPlay()
+// Called when the game starts or when spawned
+void ASMGNade::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGBullet::OnHit);
+
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGNade::OnHit);
 }
+

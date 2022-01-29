@@ -141,3 +141,7 @@ void APlayerCharacter::MainFire()
 void APlayerCharacter::AltFire()
 {
 }
+
+void APlayerCharacter::AimedAbility1()
+{
+}
