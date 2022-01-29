@@ -76,31 +76,29 @@ void ASMG::AltFire()
 
 		FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
 
-		bool leftSide = true;
 		//	for loop of ammo going from right to left, all ammo counts have same spread
-		for (int ii = 0; ii < m_ammo; ++ii)
+		if (m_ammo > 1)
 		{
-			ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
-
-			if (Bullet)
+			const float CONE_OF_FIRE = 25.f;
+			LookRotation.Yaw += CONE_OF_FIRE / 2;
+			float interBulletAngle = CONE_OF_FIRE / (m_ammo - 1);
+			for (int ii = 0; ii < m_ammo; ++ii)
 			{
-				if (leftSide)
+				ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
+
+				if (Bullet)
 				{
 					Bullet->FireInDirection((LookRotation).Vector());
-					LookRotation.Yaw += ii;
+					LookRotation.Yaw -= interBulletAngle;
 					SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
-					leftSide = false;
-				}
-				else
-				{
-					Bullet->FireInDirection((LookRotation).Vector());
-					LookRotation.Yaw -= ii;
-					SpawnLocation = GetActorLocation() + LookRotation.RotateVector(GunOffset);
-					leftSide = true;
 				}
 			}
+			m_ammo = 0;
 		}
-		m_ammo = 0;
+		else
+		{
+			ASMGBullet* Bullet = m_world->SpawnActor<ASMGBullet>(SpawnLocation, LookRotation, Params);
+		}
 	}
 }
 
