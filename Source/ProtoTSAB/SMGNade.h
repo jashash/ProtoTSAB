@@ -43,4 +43,5 @@ protected:
 	virtual void BeginPlay() override;
 
 	float m_damageValue = 50.f;
+	float m_blastRadius = 500.f;
 };

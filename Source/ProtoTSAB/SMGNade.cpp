@@ -52,6 +52,7 @@ ASMGNade::ASMGNade()
 		{
 			ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
 		}
+		ProjectileMeshComponent->SetSimulatePhysics(true);
 		ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
 		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
