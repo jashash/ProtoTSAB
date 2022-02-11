@@ -37,11 +37,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 		UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
-	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit);
+	UPROPERTY()
+		FTimerHandle UnusedHandle;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void Explode();
 
 	float m_damageValue = 50.f;
 	float m_blastRadius = 500.f;

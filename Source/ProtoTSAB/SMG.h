@@ -25,7 +25,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY()
-		FTimerHandle UnusedHandle;
+		FTimerHandle ReloadHandle;
+	UPROPERTY()
+		FTimerHandle DashHandle;
+	UPROPERTY()
+		FTimerHandle NadeHandle;
 
 	class UWorld* m_world;
 
@@ -63,10 +67,10 @@ protected:
 	float m_reloadCooldown = 0.5f;
 
 	bool m_canNade = true;
-	float m_nadeCooldown = 1.f;
+	float m_nadeCooldown = 2.f;
 
 	bool m_canDash = true;
-	float m_dashStop = 0.1f;
-	float m_dashDistance = 1500.f;
+	float m_dashStop = 0.08f;
+	float m_dashDistance = 6000.f;
 	float m_dashCooldown = 1.f;
 };

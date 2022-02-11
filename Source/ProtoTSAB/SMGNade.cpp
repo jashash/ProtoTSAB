@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+#include "SMGFragment.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -23,7 +24,8 @@ ASMGNade::ASMGNade()
 		// Use a sphere as a simple collision representation.
 		CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 		// Set the sphere's collision radius.
-		CollisionSphere->InitSphereRadius(1.0f);
+		CollisionSphere->InitSphereRadius(1.f);
+		CollisionSphere->SetSimulatePhysics(true);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionSphere;
 	}
@@ -55,9 +57,8 @@ ASMGNade::ASMGNade()
 		ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
 		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
-		ProjectileMeshComponent->SetSimulatePhysics(true);
 	}
-	InitialLifeSpan = 3.f;
+	InitialLifeSpan = 2.f;
 
 }
 
@@ -65,7 +66,6 @@ ASMGNade::ASMGNade()
 void ASMGNade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ASMGNade::FireInDirection(const FVector& ShootDirection)
@@ -73,22 +73,34 @@ void ASMGNade::FireInDirection(const FVector& ShootDirection)
 	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
 
-void ASMGNade::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
-{
-	APlayerCharacter* target = Cast<APlayerCharacter>(OtherActor);
-
-	if (target)
-	{
-		target->DealDamage(m_damageValue);
-		Destroy();
-	}
-}
-
 // Called when the game starts or when spawned
 void ASMGNade::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ASMGNade::OnHit);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMGNade::Explode, 1.9f, false);
+}
+
+void ASMGNade::Explode()
+{
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.Instigator = GetInstigator();
+
+	FRotator LookRotation = FRotator(1.f, 0.f, 0.f);
+
+	FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(FVector(80.f, 0.f, 15.f));
+
+	for (int ii = 0; ii < 20; ++ii)
+	{
+		ASMGFragment* frag = GetWorld()->SpawnActor<ASMGFragment>(SpawnLocation, LookRotation, Params);
+
+		if (frag)
+		{
+			frag->FireInDirection((LookRotation).Vector());
+			LookRotation.Yaw -= 18.f;
+			SpawnLocation = GetActorLocation() + LookRotation.RotateVector(FVector(80.f, 0.f, 15.f));
+		}
+	}
 }
 

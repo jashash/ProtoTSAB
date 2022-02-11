@@ -120,12 +120,10 @@ void ASMG::AimedAbility1()
 
 		ASMGNade* Grenade = m_world->SpawnActor<ASMGNade>(SpawnLocation, LookRotation, Params);
 
-		if (Grenade)
-		{
-			Grenade->FireInDirection(LookRotation.Vector());
-		}
+		Grenade->FireInDirection(LookRotation.Vector());
+		
 		m_canNade = false;
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::ResetAimedAbility1, m_nadeCooldown, false);
+		GetWorldTimerManager().SetTimer(NadeHandle, this, &ASMG::ResetAimedAbility1, m_nadeCooldown, false);
 	}
 }
 
@@ -136,14 +134,14 @@ void ASMG::AimedAbility2()
 		GetCharacterMovement()->BrakingFrictionFactor = 0.f;
 		LaunchCharacter(MoveDirection.GetSafeNormal() * m_dashDistance, true, true);
 		m_canDash = false;
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::StopAimedAbility2, m_dashStop, false);
+		GetWorldTimerManager().SetTimer(DashHandle, this, &ASMG::StopAimedAbility2, m_dashStop, false);
 	}
 }
 
 void ASMG::InitialReload()
 {
 	m_canFire = false;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::AbleToFire, m_reloadCooldown, false);
+	GetWorldTimerManager().SetTimer(ReloadHandle, this, &ASMG::AbleToFire, m_reloadCooldown, false);
 }
 
 void ASMG::AbleToFire()
@@ -160,7 +158,7 @@ void ASMG::ResetAimedAbility1()
 void ASMG::StopAimedAbility2()
 {
 	GetCharacterMovement()->StopMovementImmediately();
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::ResetAimedAbility2, m_dashCooldown, false);
+	GetWorldTimerManager().SetTimer(DashHandle, this, &ASMG::ResetAimedAbility2, m_dashCooldown, false);
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
 }
 

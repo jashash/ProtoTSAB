@@ -27,8 +27,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveForward(float Value);
-	void MoveRight(float Value);
 	virtual void MainFire();
 	virtual void AltFire();
 	virtual void AimedAbility1();
