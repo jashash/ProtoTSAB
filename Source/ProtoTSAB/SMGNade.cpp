@@ -91,14 +91,14 @@ void ASMGNade::Explode()
 
 	FVector SpawnLocation = GetActorLocation() + LookRotation.RotateVector(FVector(80.f, 0.f, 15.f));
 
-	for (int ii = 0; ii < 20; ++ii)
+	for (int ii = 0; ii < m_fragmentNum; ++ii)
 	{
 		ASMGFragment* frag = GetWorld()->SpawnActor<ASMGFragment>(SpawnLocation, LookRotation, Params);
 
 		if (frag)
 		{
 			frag->FireInDirection((LookRotation).Vector());
-			LookRotation.Yaw -= 18.f;
+			LookRotation.Yaw -= 360.f / m_fragmentNum;
 			SpawnLocation = GetActorLocation() + LookRotation.RotateVector(FVector(80.f, 0.f, 15.f));
 		}
 	}

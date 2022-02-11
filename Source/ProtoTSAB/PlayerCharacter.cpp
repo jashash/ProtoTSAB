@@ -43,6 +43,15 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (m_isBlocking)
+	{
+		m_moveSpeed = 0.5f;
+	}
+	else
+	{
+		m_moveSpeed = 1.f;
+	}
+
 	// Create look direction vector
 	const float LookNorthValue = GetInputAxisValue(LookNorthBinding);
 	const float LookEastValue = GetInputAxisValue(LookEastBinding);
@@ -64,8 +73,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	// If non-zero size, move this actor
 	if (MoveDirection.SizeSquared() > 0.0f)
 	{
-		AddMovementInput(MoveDirection, 1.f);
+		AddMovementInput(MoveDirection, m_moveSpeed);
 	}
+
+	HealthPercent = m_currentHealth / m_maxHealth;
 }
 
 // Called to bind functionality to input
@@ -87,12 +98,15 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(LookNorthBinding);
 	PlayerInputComponent->BindAxis(LookEastBinding);
 
+	PlayerInputComponent->BindAction("Defense", IE_Pressed, this, &APlayerCharacter::StartBlocking);
+	PlayerInputComponent->BindAction("Defense", IE_Released, this, &APlayerCharacter::StopBlocking);
+
 	//PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &CLASSNAME::MainFire);
 }
 
 void APlayerCharacter::DealDamage(float damage)
 {
-	m_currentHealth -= damage;
+	m_currentHealth -= damage / m_blockReduction;
 
 	if (m_currentHealth <= 0.f)
 	{
@@ -107,36 +121,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 }
-/*
-void APlayerCharacter::MoveForward(float Value)
-{
-	if ((Controller != nullptr) && (Value != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
-	}
-}
-
-void APlayerCharacter::MoveRight(float Value)
-{
-	if ((Controller != nullptr) && (Value != 0.0f))
-	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
-	}
-}
-*/
 void APlayerCharacter::MainFire()
 {
 }
@@ -151,4 +136,16 @@ void APlayerCharacter::AimedAbility1()
 
 void APlayerCharacter::AimedAbility2()
 {
+}
+
+void APlayerCharacter::StartBlocking()
+{
+	m_isBlocking = true;
+	m_blockReduction = 2.f;
+}
+
+void APlayerCharacter::StopBlocking()
+{
+	m_isBlocking = false;
+	m_blockReduction = 1.f;
 }

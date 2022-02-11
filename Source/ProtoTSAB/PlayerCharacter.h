@@ -23,6 +23,9 @@ public:
 
 	void DealDamage(float damage);
 
+	UPROPERTY(BlueprintReadOnly)
+		float HealthPercent = 1.f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,10 +35,13 @@ protected:
 	virtual void AimedAbility1();
 	virtual void AimedAbility2();
 
-	//	MAX HEALTH IS CHARACTER SPECIFIC
-	//const float m_maxHealth = 100.f
+	void StartBlocking();
+	void StopBlocking();
+
 	//	OVERRIDE CURRENT HEALTH TO MAXHEALTH ON SPAWN
+	float m_maxHealth = 100.f;
 	float m_currentHealth = 100.f;
+	float m_moveSpeed = 1.f;
 
 	
 	static const FName LookNorthBinding;
@@ -45,4 +51,7 @@ protected:
 	static const FName MoveNorthBinding;
 	static const FName MoveEastBinding;
 	FVector MoveDirection;
+
+	bool m_isBlocking = false;
+	float m_blockReduction = 2.f;
 };

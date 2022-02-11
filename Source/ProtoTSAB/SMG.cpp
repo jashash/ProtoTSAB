@@ -27,8 +27,6 @@ ASMG::ASMG()
 void ASMG::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//FireShot(LookDirection);
 }
 
 void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -45,7 +43,7 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ASMG::MainFire()
 {
-	if (m_world != NULL && m_ammo > 0 && m_canFire)
+	if (m_world != NULL && m_ammo > 0 && m_canFire && !m_isBlocking)
 	{
 		FActorSpawnParameters Params;
 		Params.Owner = this;
@@ -68,7 +66,7 @@ void ASMG::MainFire()
 
 void ASMG::AltFire()
 {
-	if (m_world != NULL && m_ammo > 0)
+	if (m_world != NULL && m_ammo > 0 && !m_isBlocking)
 	{
 		FActorSpawnParameters Params;
 		Params.Owner = this;
@@ -107,7 +105,7 @@ void ASMG::AltFire()
 
 void ASMG::AimedAbility1()
 {
-	if (m_world != NULL && m_canNade)
+	if (m_world != NULL && m_canNade && !m_isBlocking)
 	{
 		FActorSpawnParameters Params;
 		Params.Owner = this;
@@ -129,7 +127,7 @@ void ASMG::AimedAbility1()
 
 void ASMG::AimedAbility2()
 {
-	if (m_canDash)
+	if (m_canDash && !m_isBlocking)
 	{
 		GetCharacterMovement()->BrakingFrictionFactor = 0.f;
 		LaunchCharacter(MoveDirection.GetSafeNormal() * m_dashDistance, true, true);
@@ -140,8 +138,11 @@ void ASMG::AimedAbility2()
 
 void ASMG::InitialReload()
 {
-	m_canFire = false;
-	GetWorldTimerManager().SetTimer(ReloadHandle, this, &ASMG::AbleToFire, m_reloadCooldown, false);
+	if (!m_isBlocking)
+	{
+		m_canFire = false;
+		GetWorldTimerManager().SetTimer(ReloadHandle, this, &ASMG::AbleToFire, m_reloadCooldown, false);
+	}
 }
 
 void ASMG::AbleToFire()
