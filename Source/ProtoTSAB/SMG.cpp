@@ -19,7 +19,7 @@ ASMG::ASMG()
 	:APlayerCharacter()
 {
 
-	GunOffset = FVector(50.f, 0.f, 15.f);
+	GunOffset = FVector(80.f, 0.f, 15.f);
 	FireRate = 0.1f;
 	m_currentHealth = m_maxHealth;
 }
@@ -39,12 +39,13 @@ void ASMG::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MainFire", IE_Pressed, this, &ASMG::MainFire);
 	PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &ASMG::AltFire);
 	PlayerInputComponent->BindAction("AimedAbility1", IE_Pressed, this, &ASMG::AimedAbility1);
-	PlayerInputComponent->BindAction("Offense", IE_Pressed, this, &ASMG::Reload);
+	PlayerInputComponent->BindAction("AimedAbility2", IE_Pressed, this, &ASMG::AimedAbility2);
+	PlayerInputComponent->BindAction("RightStickDown", IE_Pressed, this, &ASMG::InitialReload);
 }
 
 void ASMG::MainFire()
 {
-	if (m_world != NULL && m_ammo > 0)
+	if (m_world != NULL && m_ammo > 0 && m_canFire)
 	{
 		FActorSpawnParameters Params;
 		Params.Owner = this;
@@ -106,7 +107,7 @@ void ASMG::AltFire()
 
 void ASMG::AimedAbility1()
 {
-	if (m_world != NULL)
+	if (m_world != NULL && m_canNade)
 	{
 		FActorSpawnParameters Params;
 		Params.Owner = this;
@@ -123,12 +124,49 @@ void ASMG::AimedAbility1()
 		{
 			Grenade->FireInDirection(LookRotation.Vector());
 		}
+		m_canNade = false;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::ResetAimedAbility1, m_nadeCooldown, false);
 	}
 }
 
-void ASMG::Reload()
+void ASMG::AimedAbility2()
+{
+	if (m_canDash)
+	{
+		GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+		LaunchCharacter(MoveDirection.GetSafeNormal() * m_dashDistance, true, true);
+		m_canDash = false;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::StopAimedAbility2, m_dashStop, false);
+	}
+}
+
+void ASMG::InitialReload()
+{
+	m_canFire = false;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::AbleToFire, m_reloadCooldown, false);
+}
+
+void ASMG::AbleToFire()
 {
 	m_ammo = 10;
+	m_canFire = true;
+}
+
+void ASMG::ResetAimedAbility1()
+{
+	m_canNade = true;
+}
+
+void ASMG::StopAimedAbility2()
+{
+	GetCharacterMovement()->StopMovementImmediately();
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASMG::ResetAimedAbility2, m_dashCooldown, false);
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+}
+
+void ASMG::ResetAimedAbility2()
+{
+	m_canDash = true;
 }
 
 void ASMG::BeginPlay()

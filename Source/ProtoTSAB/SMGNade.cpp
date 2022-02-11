@@ -37,7 +37,7 @@ ASMGNade::ASMGNade()
 		ProjectileMovement->bRotationFollowsVelocity = true;
 		ProjectileMovement->bShouldBounce = true;
 		//	***************I WANT IT TO BOUNCE*************************
-		ProjectileMovement->ProjectileGravityScale = 1.f;
+		ProjectileMovement->ProjectileGravityScale = 0.f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -52,10 +52,10 @@ ASMGNade::ASMGNade()
 		{
 			ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
 		}
-		ProjectileMeshComponent->SetSimulatePhysics(true);
 		ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
 		ProjectileMeshComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 		ProjectileMeshComponent->SetupAttachment(RootComponent);
+		ProjectileMeshComponent->SetSimulatePhysics(true);
 	}
 	InitialLifeSpan = 3.f;
 

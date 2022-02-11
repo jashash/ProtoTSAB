@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PlayerCharacter.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 #include "SMG.generated.h"
 
 /**
@@ -23,10 +24,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/*
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* FireSound;
-	*/
+	UPROPERTY()
+		FTimerHandle UnusedHandle;
 
 	class UWorld* m_world;
 
@@ -43,13 +42,31 @@ protected:
 		TSubclassOf<class UClass> ProjectileClass;
 
 	virtual void BeginPlay() override;
+	virtual void MainFire() override;	//	peashooter
+	virtual void AltFire() override;	//	shotgun remaining ammo
+	virtual void AimedAbility1() override;	//	grenade
+	virtual void AimedAbility2() override;	//	dash
 
-	virtual void MainFire() override;
-	virtual void AltFire() override;
-	virtual void AimedAbility1() override;
+	void InitialReload();
+	void AbleToFire();
 
-	void Reload();
+	void ResetAimedAbility1();
+
+	void StopAimedAbility2();
+	void ResetAimedAbility2();
+
 
 	const float m_maxHealth = 100.f;
+
 	int m_ammo = 10;
+	bool m_canFire = true;
+	float m_reloadCooldown = 0.5f;
+
+	bool m_canNade = true;
+	float m_nadeCooldown = 1.f;
+
+	bool m_canDash = true;
+	float m_dashStop = 0.1f;
+	float m_dashDistance = 1500.f;
+	float m_dashCooldown = 1.f;
 };

@@ -32,6 +32,7 @@ protected:
 	virtual void MainFire();
 	virtual void AltFire();
 	virtual void AimedAbility1();
+	virtual void AimedAbility2();
 
 	//	MAX HEALTH IS CHARACTER SPECIFIC
 	//const float m_maxHealth = 100.f
@@ -42,4 +43,8 @@ protected:
 	static const FName LookNorthBinding;
 	static const FName LookEastBinding;
 	FVector LookDirection;
+
+	static const FName MoveNorthBinding;
+	static const FName MoveEastBinding;
+	FVector MoveDirection;
 };
