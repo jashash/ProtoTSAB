@@ -25,6 +25,7 @@ ASMGNade::ASMGNade()
 		CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 		// Set the sphere's collision radius.
 		CollisionSphere->InitSphereRadius(1.f);
+		CollisionSphere->SetCollisionProfileName(TEXT("Pawn"));
 		CollisionSphere->SetSimulatePhysics(true);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionSphere;

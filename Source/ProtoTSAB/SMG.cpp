@@ -20,7 +20,6 @@ ASMG::ASMG()
 {
 
 	GunOffset = FVector(80.f, 0.f, 15.f);
-	FireRate = 0.1f;
 	m_currentHealth = m_maxHealth;
 }
 

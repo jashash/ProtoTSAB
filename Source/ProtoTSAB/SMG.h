@@ -38,10 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
 
-	/* How fast the weapon will fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float FireRate;
-
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class UClass> ProjectileClass;
 
