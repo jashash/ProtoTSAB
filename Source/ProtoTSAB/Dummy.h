@@ -21,7 +21,18 @@ public:
 	// Called to bind functionality to input
 	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere)
+		int DummyType = 0;
+
+	UPROPERTY()
+		FTimerHandle MoveHandle;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void MoveUp();
+	void MoveDown();
+
+	FVector m_direction;
 };
