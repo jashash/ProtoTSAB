@@ -47,5 +47,5 @@ protected:
 
 	float m_damageValue = 50.f;
 	float m_blastRadius = 500.f;
-	int m_fragmentNum = 20;
+	int m_fragmentNum = 4;	//	more like 20
 };

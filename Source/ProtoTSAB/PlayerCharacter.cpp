@@ -141,7 +141,7 @@ void APlayerCharacter::AimedAbility2()
 void APlayerCharacter::StartBlocking()
 {
 	m_isBlocking = true;
-	m_blockReduction = 2.f;
+	m_blockReduction = 5.f;	//	more like 2 or something
 }
 
 void APlayerCharacter::StopBlocking()
