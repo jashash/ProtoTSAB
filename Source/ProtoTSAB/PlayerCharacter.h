@@ -27,6 +27,9 @@ public:
 		float HealthPercent = 1.f;
 
 protected:
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+		//ECharacterClass characterClass;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -53,5 +56,5 @@ protected:
 	FVector MoveDirection;
 
 	bool m_isBlocking = false;
-	float m_blockReduction = 2.f;
+	float m_blockReduction = 5.f;
 };

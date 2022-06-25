@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "PlayerCharacter.h"
 #include "TrainingMode.generated.h"
 
 /**
@@ -14,4 +15,9 @@ class PROTOTSAB_API ATrainingMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+public:
+	ATrainingMode();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
+		APlayerCharacter* player1;
 };
